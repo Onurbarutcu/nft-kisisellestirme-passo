@@ -128,11 +128,11 @@ if (newsTrack) {
   const items = Array.from({ length: 6 }, () => article);
 
   newsTrack.innerHTML = items.map((a) => `
-    <article class="news-card">
+    <a class="news-card" href="blog.html">
       <div class="news-thumb"><img src="${a.img}" alt="${a.title}" /></div>
       <div class="news-body"><h3>${a.title}</h3><p>${a.desc}</p></div>
       <div class="news-date">${a.date}</div>
-    </article>`).join('');
+    </a>`).join('');
 
   const cards = [...newsTrack.querySelectorAll('.news-card')];
   const step = () => cards[0].offsetWidth + 32;
