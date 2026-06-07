@@ -762,7 +762,7 @@ a { color: inherit; text-decoration: none; }
 /* =========================================================
    CONTACT
    ========================================================= */
-.contact { text-align: center; padding-bottom: 60px; }
+.contact { text-align: center; padding-bottom: 30px; }
 .contact .container {
   display: flex;
   flex-direction: column;
@@ -794,13 +794,13 @@ a { color: inherit; text-decoration: none; }
    ========================================================= */
 .site-footer {
   position: relative;
-  padding-top: 40px;
+  padding-top: 0;
 }
 /* Gold horizon (assets/img/hero-horizon.svg) — same mechanism as the hero: arc clipped at the
    container's bottom so it never shows a hard cut, glow rises up */
 .footer-glow-area {
   position: relative;
-  height: 460px;                      /* taller so the glow fades softly & wide, like the hero */
+  height: 240px;                      /* tightened — less empty space above the gold arc */
   overflow: hidden;
 }
 .footer-glow {
@@ -818,7 +818,7 @@ a { color: inherit; text-decoration: none; }
   position: relative;
   z-index: 1;
   border-top: 1px solid var(--border);
-  padding: 24px 40px;
+  padding: 48px 40px 24px;             /* extra top room so socials clear the centred Başa Dön button */
 }
 .footer-inner {
   position: relative;
@@ -851,7 +851,7 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 768px) {
   .site-footer { padding-top: 180px; }
   .footer-bottom { padding: 24px 20px; }
-  .back-to-top { position: static !important; margin-bottom: 8px; }
+  .back-to-top { position: static !important; transform: none !important; margin-bottom: 8px; }
   .contact-actions { flex-direction: column; align-items: stretch; }
 }
 
@@ -860,7 +860,8 @@ a { color: inherit; text-decoration: none; }
    ========================================================= */
 .back-to-top {
   position: absolute;
-  top: 0; right: 0;                    /* top-right of the bottom bar */
+  top: 0; left: 50%;
+  transform: translate(-50%, -50%);    /* centred, sitting right on the divider / gold line */
   z-index: 3;
   display: inline-flex;
   align-items: center;
