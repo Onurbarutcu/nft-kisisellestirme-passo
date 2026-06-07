@@ -1,0 +1,15 @@
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Editor
+.vscode/
+
+# Temp/scratch
+_*.png
+_*.html
+_*.py
+
+# Kullanilmayan ham tasarim SVG dosyalari (kok dizin)
+/*.svg
