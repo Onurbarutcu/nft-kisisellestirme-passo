@@ -19,16 +19,27 @@ backToTop.addEventListener('click', () => {
 
 // ===== Events coverflow carousel =====
 const events = [
-  { img: 'assets/img/event-drakula.jpg', title: 'Drakula', date: '20 Şubat Cumartesi – 21:00' },
-  { img: 'assets/img/event-anyma.jpg',   title: 'ANYMA PRESENTS ÆDEN', date: '20 Şubat Cumartesi – 21:00' },
+  { img: 'assets/img/event-drakula.jpg', title: 'Drakula', date: '13 Haziran 20:30', url: 'https://www.passo.com.tr/tr/etkinlik/drakula-zorlupsm-turkcell-sahnesi-biletleri/11601319' },
+  { img: 'assets/img/event-anyma.jpg',   title: 'ANYMA PRESENTS ÆDEN', date: '12 Eylül 16:00', url: 'https://www.passo.com.tr/tr/etkinlik/anyma-presents-aeden-atakoy-marina-arena-passo/10515320' },
   { img: 'assets/img/event-tan.jpg',     title: 'Tan Taşçı', date: '12 Haziran – 3 Ekim', url: 'https://www.passo.com.tr/tr/etkinlik-grubu/tan-tasci-konserleri-passo/161614' },
+  { more: true, title: 'Tüm Etkinlikler', date: 'PASSO’da keşfet →', url: 'https://www.passo.com.tr/tr/kategori/muzik-konser-festival-biletleri/8615' },
 ];
 const track = document.getElementById('eventsTrack');
 const progress = document.getElementById('eventsProgress');
 
 if (track) {
   // render every slide + a progress segment per slide
-  track.innerHTML = events.map((e, i) => `
+  track.innerHTML = events.map((e, i) => e.more ? `
+    <div class="event-card event-more" data-index="${i}">
+      <div class="event-poster more-poster">
+        <div class="more-inner">
+          <span class="more-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M10 8l4 4-4 4"/></svg></span>
+          <strong>Daha Fazlası</strong>
+          <span class="more-sub">Tüm Konser &amp; Festival Biletleri</span>
+        </div>
+      </div>
+      <div class="event-meta"><h3>${e.title}</h3><div class="date">${e.date}</div></div>
+    </div>` : `
     <div class="event-card" data-index="${i}">
       <div class="event-poster"><img src="${e.img}" alt="${e.title}" /></div>
       <div class="event-meta"><h3>${e.title}</h3><div class="date">${e.date}</div></div>
@@ -41,7 +52,7 @@ if (track) {
 
   const GAP = 8;            // active ↔ passive gap (px)
   const ASPECT = 1.69;      // poster width / height
-  let active = Math.floor(cards.length / 2);   // start on the middle slide
+  let active = Math.min(1, cards.length - 1);   // start on ANYMA (centre of the event posters)
 
   // responsive real sizes — no scaling, true width/height per spec
   function sizes() {

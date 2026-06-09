@@ -602,6 +602,28 @@ a { color: inherit; text-decoration: none; }
   box-shadow: 0 20px 55px rgba(0, 0, 0, 0.55);
 }
 .event-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* "Daha Fazlası" call-to-action card */
+.more-poster {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(120% 130% at 50% 0%, rgba(233,196,106,0.20), transparent 62%),
+    linear-gradient(160deg, #1b1710 0%, #121113 70%);
+  border: 1px solid rgba(248,184,110,0.28);
+}
+.more-inner { text-align: center; padding: 6%; }
+.more-icon { display: inline-flex; color: var(--gold); }
+.more-icon svg { width: clamp(40px, 4vw, 58px); height: clamp(40px, 4vw, 58px); }
+.more-inner strong {
+  display: block;
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: clamp(1.15rem, 2vw, 1.55rem);
+  color: var(--text);
+  margin-top: 12px;
+}
+.more-sub { display: block; color: var(--text-muted); font-size: clamp(0.8rem, 1.3vw, 0.95rem); margin-top: 6px; }
 .event-meta { margin-top: 16px; padding-left: 2px; text-align: left; }
 .event-meta h3 { font-family: var(--font-head); font-weight: 600; font-size: 1.2rem; }
 .event-meta .date { color: var(--text-muted); font-size: 0.92rem; margin-top: 5px; }
