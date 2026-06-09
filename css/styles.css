@@ -232,6 +232,8 @@ a { color: inherit; text-decoration: none; }
 /* =========================================================
    EXPERIENCE / DENEYIM
    ========================================================= */
+/* tighten only the gap between the hero visual and this section */
+#deneyim { padding-top: 40px; }
 .exp-card {
   position: relative;
   display: grid;
