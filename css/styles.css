@@ -331,8 +331,8 @@ a { color: inherit; text-decoration: none; }
   /* same overlap as desktop, just centred: phone behind, selbox over its lower-centre
      (slightly left) and sliding further left on hover */
   .exp-phone-screen { top: -20px; bottom: auto; right: 50%; transform: translateX(50%); width: 280px; }
-  .exp-selbox { top: 45px; right: 50%; transform: translateX(calc(50% - 34px)); width: 280px; }
-  .exp-card:hover .exp-selbox { transform: translateX(calc(50% - 80px)); }
+  .exp-selbox { top: 45px; right: 50%; transform: translateX(calc(50% - 12px)); width: 280px; }
+  .exp-card:hover .exp-selbox { transform: translateX(calc(50% - 58px)); }
 }
 
 /* =========================================================
