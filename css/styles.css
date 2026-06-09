@@ -492,8 +492,26 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
   gap: 60px;
 }
-.journey-phone { display: flex; justify-content: center; }
-.journey-phone img { width: 100%; max-width: 340px; transition: opacity 0.17s ease; }
+.journey-phone {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  margin-inline: auto;
+  aspect-ratio: 978 / 1929;       /* all journey screenshots share this canvas */
+  cursor: pointer;
+}
+.journey-phone .jp-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  /* new screen rises from behind: scale + brightness + opacity together */
+  transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
+  will-change: opacity, transform, filter;
+  backface-visibility: hidden;
+}
 
 .journey-steps { list-style: none; display: flex; flex-direction: column; gap: 18px; }
 .step {

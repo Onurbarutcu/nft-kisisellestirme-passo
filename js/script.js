@@ -162,31 +162,58 @@ if (newsTrack) {
 }
 
 // ===== Journey steps (click text OR phone — they stay in sync) =====
-const journeyPhone = document.getElementById('journeyPhone');
 const journeySteps = [...document.querySelectorAll('.journey-steps .step')];
+const jpLayers = [document.getElementById('journeyPhone'), document.getElementById('journeyPhoneB')];
+const journeyPhoneWrap = document.getElementById('journeyPhoneWrap');
 
-function activateStep(step) {
-  if (!step) return;
-  journeySteps.forEach((s) => s.classList.remove('is-active'));
-  step.classList.add('is-active');
-  const img = step.dataset.img;
-  if (img && journeyPhone && !journeyPhone.src.endsWith(img)) {
-    journeyPhone.style.opacity = '0';                 // soft cross-fade swap
-    setTimeout(() => {
-      journeyPhone.src = img;
-      journeyPhone.style.opacity = '1';
-    }, 170);
+if (jpLayers[0] && jpLayers[1]) {
+  // preload every screenshot so the incoming layer never flashes blank
+  journeySteps.forEach((s) => { if (s.dataset.img) { const i = new Image(); i.src = s.dataset.img; } });
+
+  let front = 0;                                   // index of the currently visible layer
+  jpLayers[1].style.opacity = '0';
+
+  // the new screen darkens-in from behind while the old recedes & dims
+  function showImage(src) {
+    const cur = jpLayers[front];
+    if (cur.src.endsWith(src)) return;
+    const nxt = jpLayers[front ^ 1];
+
+    nxt.src = src;
+    nxt.style.transition = 'none';
+    nxt.style.opacity = '0';
+    nxt.style.transform = 'scale(0.85)';           // sits "behind"
+    nxt.style.filter = 'brightness(0.3)';          // dark at first
+    nxt.style.zIndex = '2';
+    cur.style.zIndex = '1';
+    void nxt.offsetWidth;                          // flush styles before animating
+
+    requestAnimationFrame(() => {
+      nxt.style.transition = 'opacity 0.5s ease, transform 0.55s cubic-bezier(0.22,1,0.36,1), filter 0.5s ease';
+      cur.style.transition = 'opacity 0.5s ease, transform 0.55s ease, filter 0.5s ease';
+      nxt.style.opacity = '1';
+      nxt.style.transform = 'scale(1)';            // grows forward into place
+      nxt.style.filter = 'brightness(1)';
+      cur.style.opacity = '0';
+      cur.style.transform = 'scale(1.05)';         // old pushes back & fades
+      cur.style.filter = 'brightness(0.35)';
+    });
+    front ^= 1;
   }
-}
 
-journeySteps.forEach((step) => step.addEventListener('click', () => activateStep(step)));
+  function activateStep(step) {
+    if (!step) return;
+    journeySteps.forEach((s) => s.classList.remove('is-active'));
+    step.classList.add('is-active');
+    if (step.dataset.img) showImage(step.dataset.img);
+  }
 
-// clicking the phone advances to the next step that has its own screenshot
-if (journeyPhone) {
+  journeySteps.forEach((step) => step.addEventListener('click', () => activateStep(step)));
+
+  // clicking the phone advances to the next step that has its own screenshot
   const imgSteps = journeySteps.filter((s) => s.dataset.img);
-  if (imgSteps.length > 1) {
-    journeyPhone.style.cursor = 'pointer';
-    journeyPhone.addEventListener('click', () => {
+  if (journeyPhoneWrap && imgSteps.length > 1) {
+    journeyPhoneWrap.addEventListener('click', () => {
       const idx = imgSteps.findIndex((s) => s.classList.contains('is-active'));
       activateStep(imgSteps[(idx + 1) % imgSteps.length]);
     });
