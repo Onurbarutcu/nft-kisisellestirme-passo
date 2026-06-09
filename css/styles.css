@@ -328,9 +328,11 @@ a { color: inherit; text-decoration: none; }
   .exp-card { grid-template-columns: 1fr; padding: 36px 28px 0; gap: 24px; text-align: left; }
   .exp-text { padding-bottom: 0; }
   .exp-visual { min-height: 400px; }
-  .exp-phone-screen { top: auto; bottom: 0; right: 50%; transform: translateX(50%); width: 280px; }
-  .exp-selbox { top: 56px; right: 50%; transform: translateX(calc(50% + 64px)); width: 280px; }
-  .exp-card:hover .exp-selbox { transform: translateX(calc(50% + 22px)); }
+  /* same overlap as desktop, just centred: phone behind, selbox over its lower-centre
+     (slightly left) and sliding further left on hover */
+  .exp-phone-screen { top: -20px; bottom: auto; right: 50%; transform: translateX(50%); width: 280px; }
+  .exp-selbox { top: 45px; right: 50%; transform: translateX(calc(50% - 34px)); width: 280px; }
+  .exp-card:hover .exp-selbox { transform: translateX(calc(50% - 80px)); }
 }
 
 /* =========================================================
