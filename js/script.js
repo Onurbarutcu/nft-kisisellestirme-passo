@@ -54,12 +54,13 @@ if (track) {
   const ASPECT = 1.69;      // poster width / height
   let active = Math.min(1, cards.length - 1);   // start on ANYMA (centre of the event posters)
 
-  // responsive real sizes — no scaling, true width/height per spec
+  // responsive real sizes — 3 cards fill the width with only small edge padding
+  // (active + 2 passives = active * 2.314; + 2 gaps). 4th card sits off-screen.
   function sizes() {
     const vw = window.innerWidth;
     const activeW = vw > 768
-      ? Math.min(577, (vw - 24) / 2.314)   // desktop/tablet: all three fully visible
-      : vw * 0.74;                          // mobile: dominant centre, neighbours peek
+      ? Math.min(820, (vw - 56) / 2.314)   // fill width, ~20px side padding, capped on ultra-wide
+      : vw * 0.78;                          // mobile: dominant centre, neighbours peek
     return { activeW, passiveW: activeW * 0.657 };
   }
 
