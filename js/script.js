@@ -21,7 +21,7 @@ backToTop.addEventListener('click', () => {
 const events = [
   { img: 'assets/img/event-drakula.jpg', title: 'Drakula', date: '20 Şubat Cumartesi – 21:00' },
   { img: 'assets/img/event-anyma.jpg',   title: 'ANYMA PRESENTS ÆDEN', date: '20 Şubat Cumartesi – 21:00' },
-  { img: 'assets/img/event-tan.jpg',     title: 'Tan Taşçı', date: '20 Şubat Cumartesi – 21:00' },
+  { img: 'assets/img/event-tan.jpg',     title: 'Tan Taşçı', date: '12 Haziran – 3 Ekim', url: 'https://www.passo.com.tr/tr/etkinlik-grubu/tan-tasci-konserleri-passo/161614' },
 ];
 const track = document.getElementById('eventsTrack');
 const progress = document.getElementById('eventsProgress');
@@ -65,6 +65,7 @@ if (track) {
       c.style.width = w + 'px';
       c.style.marginTop = ((activeH - w / ASPECT) / 2) + 'px';   // centre posters on one axis
       c.classList.toggle('active', on);
+      c.style.cursor = on ? (events[i].url ? 'pointer' : 'default') : 'pointer';
       segs[i].classList.toggle('active', on);
     });
 
@@ -84,10 +85,12 @@ if (track) {
     layout(true);
   }
 
-  // click a side card to bring it to the centre (suppressed right after a drag)
+  // click a side card to centre it; click the active card to open its event link
   let dragged = false;
   cards.forEach((c, i) => c.addEventListener('click', () => {
-    if (!dragged && i !== active) setActive(i);
+    if (dragged) return;
+    if (i !== active) { setActive(i); return; }
+    if (events[i].url) window.open(events[i].url, '_blank', 'noopener');
   }));
   segs.forEach((s, i) => s.addEventListener('click', () => setActive(i)));
 
