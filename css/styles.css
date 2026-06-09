@@ -849,8 +849,13 @@ a { color: inherit; text-decoration: none; }
 .footer-stores { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
 .footer-stores img { height: 52px; width: auto; border-radius: 8px; }
 
+@media (max-width: 980px) {
+  /* the glow scales down with vw on narrow screens, so shrink the area to match —
+     otherwise a huge empty black band sits above it (desktop ≥980 keeps 460px) */
+  .footer-glow-area { height: calc(22vw + 16px); margin-top: 0; }
+}
 @media (max-width: 768px) {
-  .site-footer { padding-top: 180px; }
+  .site-footer { padding-top: 0; }
   .footer-bottom { padding: 24px 20px; }
   .back-to-top { position: static !important; margin-bottom: 8px; }
   .contact-actions { flex-direction: column; align-items: stretch; }
