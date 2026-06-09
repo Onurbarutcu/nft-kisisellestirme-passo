@@ -913,6 +913,10 @@ a { color: inherit; text-decoration: none; }
    ========================================================= */
 @media (max-width: 768px) {
   .section { padding: 60px 0; }
+  /* tighten the gap between the experience card and the feature cards
+     so it matches the gap between the two feature cards (~20px) */
+  #deneyim { padding-bottom: 10px; }
+  #ozellikler { padding-top: 10px; }
   .hero { padding-top: 40px; }
   .hero-sub { font-size: 0.95rem; }
   .container { padding-inline: 18px; }
