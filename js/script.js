@@ -39,79 +39,77 @@ if (track) {
   const cards = [...track.querySelectorAll('.event-card')];
   const segs = [...progress.querySelectorAll('.seg')];
 
-  // mark the card nearest the track centre as active
-  function updateActive() {
-    const r = track.getBoundingClientRect();
-    const center = r.left + r.width / 2;
-    let best = 0, bestDist = Infinity;
-    cards.forEach((c, i) => {
-      const cr = c.getBoundingClientRect();
-      const d = Math.abs(cr.left + cr.width / 2 - center);
-      if (d < bestDist) { bestDist = d; best = i; }
-    });
-    cards.forEach((c, i) => c.classList.toggle('active', i === best));
-    segs.forEach((s, i) => s.classList.toggle('active', i === best));
+  const GAP = 8;            // active ↔ passive gap (px)
+  const ASPECT = 1.69;      // poster width / height
+  let active = Math.floor(cards.length / 2);   // start on the middle slide
+
+  // responsive real sizes — no scaling, true width/height per spec
+  function sizes() {
+    const vw = window.innerWidth;
+    const activeW = vw > 768
+      ? Math.min(577, (vw - 24) / 2.314)   // desktop/tablet: all three fully visible
+      : vw * 0.74;                          // mobile: dominant centre, neighbours peek
+    return { activeW, passiveW: activeW * 0.657 };
   }
 
-  let raf;
-  track.addEventListener('scroll', () => {
-    cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(updateActive);
-  }, { passive: true });
+  // lay out the cards at their real sizes and slide the track so the active card is centred
+  function layout(animate = true) {
+    const { activeW, passiveW } = sizes();
+    const activeH = activeW / ASPECT;
+    track.style.transition = animate ? '' : 'none';
 
-  // click a card to bring it to the centre (suppressed right after a drag)
+    cards.forEach((c, i) => {
+      const on = i === active;
+      const w = on ? activeW : passiveW;
+      c.style.transition = animate ? '' : 'none';
+      c.style.width = w + 'px';
+      c.style.marginTop = ((activeH - w / ASPECT) / 2) + 'px';   // centre posters on one axis
+      c.classList.toggle('active', on);
+      segs[i].classList.toggle('active', on);
+    });
+
+    const centerOfActive = active * (passiveW + GAP) + activeW / 2;
+    track.style.transform = `translateX(${window.innerWidth / 2 - centerOfActive}px)`;
+
+    if (!animate) {   // restore transitions on the next frame
+      requestAnimationFrame(() => {
+        track.style.transition = '';
+        cards.forEach((c) => (c.style.transition = ''));
+      });
+    }
+  }
+
+  function setActive(i) {
+    active = Math.max(0, Math.min(cards.length - 1, i));
+    layout(true);
+  }
+
+  // click a side card to bring it to the centre (suppressed right after a drag)
   let dragged = false;
-  cards.forEach((c) => c.addEventListener('click', () => {
-    if (dragged) return;
-    c.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  cards.forEach((c, i) => c.addEventListener('click', () => {
+    if (!dragged && i !== active) setActive(i);
   }));
+  segs.forEach((s, i) => s.addEventListener('click', () => setActive(i)));
 
-  // drag to scroll (mouse / touch)
-  let down = false, startX = 0, startScroll = 0;
-  track.addEventListener('pointerdown', (e) => {
-    down = true; dragged = false;
-    startX = e.clientX; startScroll = track.scrollLeft;
-    track.style.scrollBehavior = 'auto';
-    track.style.scrollSnapType = 'none';
-  });
+  // drag / swipe to move one slide
+  let down = false, startX = 0;
+  track.addEventListener('pointerdown', (e) => { down = true; dragged = false; startX = e.clientX; });
   track.addEventListener('pointermove', (e) => {
-    if (!down) return;
-    const dx = e.clientX - startX;
-    if (Math.abs(dx) > 5) dragged = true;
-    track.scrollLeft = startScroll - dx;
+    if (down && Math.abs(e.clientX - startX) > 6) dragged = true;
   });
-  function endDrag() {
+  function endDrag(e) {
     if (!down) return;
     down = false;
-    track.style.scrollBehavior = 'smooth';
-    track.style.scrollSnapType = 'x mandatory';
-    // snap to the card nearest the centre
-    const r = track.getBoundingClientRect();
-    const center = r.left + r.width / 2;
-    let best = cards[0], bestDist = Infinity;
-    cards.forEach((c) => {
-      const cr = c.getBoundingClientRect();
-      const d = Math.abs(cr.left + cr.width / 2 - center);
-      if (d < bestDist) { bestDist = d; best = c; }
-    });
-    best.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    const dx = (e.clientX || startX) - startX;
+    if (dx <= -40) setActive(active + 1);
+    else if (dx >= 40) setActive(active - 1);
   }
   track.addEventListener('pointerup', endDrag);
-  track.addEventListener('pointercancel', endDrag);
-  track.addEventListener('pointerleave', endDrag);
+  track.addEventListener('pointercancel', () => { down = false; });
 
-  // start centred on the middle slide
-  function centerMiddle() {
-    const mid = cards[Math.floor(cards.length / 2)];
-    const prev = track.style.scrollBehavior;
-    track.style.scrollBehavior = 'auto';
-    mid.scrollIntoView({ inline: 'center', block: 'nearest' });
-    track.style.scrollBehavior = prev || 'smooth';
-    updateActive();
-  }
-  requestAnimationFrame(centerMiddle);
-  window.addEventListener('load', centerMiddle);
-  updateActive();
+  layout(false);
+  window.addEventListener('load', () => layout(false));
+  window.addEventListener('resize', () => layout(false));
 }
 
 // ===== NFT News carousel =====

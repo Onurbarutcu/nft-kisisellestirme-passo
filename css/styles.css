@@ -568,72 +568,54 @@ a { color: inherit; text-decoration: none; }
 /* =========================================================
    EVENTS CAROUSEL (coverflow)
    ========================================================= */
-/* Full-bleed so the centre card + both neighbours fit without clipping */
+/* Full-bleed coverflow — big centre card, smaller real-sized neighbours */
 .events {
   position: relative;
   width: 100vw;
   margin-left: calc(50% - 50vw);
+  overflow: hidden;                 /* clip slides beyond the viewport */
+  padding: 18px 0 4px;
 }
-/* Horizontal scroll carousel — no arrows, scroll to navigate */
 .events-track {
   display: flex;
-  align-items: center;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  scrollbar-width: none;            /* Firefox */
-  -ms-overflow-style: none;
-  padding: 16px 0 10px;
-  padding-inline: calc(50% - var(--ev-w) / 2);   /* lets first & last card snap to center */
-  cursor: grab;
+  align-items: flex-start;
+  gap: 8px;                         /* active ↔ passive spacing */
+  width: max-content;
+  will-change: transform;
+  transition: transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
   user-select: none;
-  --ev-w: min(576px, 40vw);         /* foreground card width (responsive so neighbours always fit) */
 }
-.events-track:active { cursor: grabbing; }
-.events-track::-webkit-scrollbar { display: none; }
 .event-poster img { -webkit-user-drag: none; user-drag: none; pointer-events: none; }
 .event-card {
-  flex: 0 0 var(--ev-w);            /* footprint = foreground size */
-  scroll-snap-align: center;
+  flex: 0 0 auto;                   /* real width set inline by JS (no scaling) */
   cursor: pointer;
-  margin-inline: calc(var(--ev-w) * -0.146);   /* pull neighbours closer w/o clipping */
-  opacity: 0.5;
-  transform: scale(0.656);          /* 576 → 378 (background size) */
-  transform-origin: center center;
-  transition: transform .5s cubic-bezier(.22,.61,.36,1), opacity .5s ease;
+  /* smoothly resize + re-centre on navigation */
+  transition: width 0.55s cubic-bezier(0.22, 0.61, 0.36, 1),
+              margin-top 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
-.event-card.active {
-  opacity: 1;
-  transform: scale(1);              /* foreground = full size */
-  z-index: 2;
-}
+.event-card.active { z-index: 2; cursor: default; }
 .event-poster {
-  width: var(--ev-w);
-  aspect-ratio: 576 / 324;          /* 16:9 */
-  border-radius: 18.68px;           /* scaled-down sides → ~12.28px ✓ */
+  width: 100%;
+  aspect-ratio: 1.69;               /* active 577×~341, passive 379×~224 */
+  border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 18px 50px rgba(0,0,0,0.5);
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.55);
 }
 .event-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.event-meta { margin-top: 18px; padding-left: 4px; text-align: left; }   /* left-aligned info */
+.event-meta { margin-top: 16px; padding-left: 2px; text-align: left; }
 .event-meta h3 { font-family: var(--font-head); font-weight: 600; font-size: 1.2rem; }
 .event-meta .date { color: var(--text-muted); font-size: 0.92rem; margin-top: 5px; }
 
-/* Scroll progress indicator (grows with the number of slides) */
-.events-progress { display: flex; justify-content: center; gap: 6px; margin-top: 30px; }
+/* Progress indicator (grows with the number of slides) */
+.events-progress { display: flex; justify-content: center; gap: 6px; margin-top: 34px; }
 .events-progress .seg {
   width: 16px; height: 8px;
   border-radius: 4.5px;
   background: #888888;
+  cursor: pointer;
   transition: width .35s ease, background .35s ease;
 }
 .events-progress .seg.active { width: 41px; background: #D63031; }
-
-@media (max-width: 768px) {
-  .events-track { --ev-w: 78vw; }
-  .event-card { transform: scale(0.82); }
-}
-}
 
 /* =========================================================
    NFT NEWS CAROUSEL
