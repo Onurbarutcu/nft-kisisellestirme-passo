@@ -801,6 +801,7 @@ a { color: inherit; text-decoration: none; }
 .footer-glow-area {
   position: relative;
   height: 460px;                      /* taller so the glow fades softly & wide, like the hero */
+  margin-top: -70px;                  /* pull glow up ~30% closer to the buttons (glow itself unchanged) */
   overflow: hidden;
 }
 .footer-glow {
