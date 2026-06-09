@@ -493,7 +493,7 @@ a { color: inherit; text-decoration: none; }
   gap: 60px;
 }
 .journey-phone { display: flex; justify-content: center; }
-.journey-phone img { width: 100%; max-width: 340px; }
+.journey-phone img { width: 100%; max-width: 340px; transition: opacity 0.17s ease; }
 
 .journey-steps { list-style: none; display: flex; flex-direction: column; gap: 18px; }
 .step {

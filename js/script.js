@@ -161,14 +161,37 @@ if (newsTrack) {
   renderDots();
 }
 
-// ===== Journey steps (click to activate) =====
-const journeySteps = document.querySelectorAll('.journey-steps .step');
-journeySteps.forEach((step) => {
-  step.addEventListener('click', () => {
-    journeySteps.forEach((s) => s.classList.remove('is-active'));
-    step.classList.add('is-active');
-  });
-});
+// ===== Journey steps (click text OR phone — they stay in sync) =====
+const journeyPhone = document.getElementById('journeyPhone');
+const journeySteps = [...document.querySelectorAll('.journey-steps .step')];
+
+function activateStep(step) {
+  if (!step) return;
+  journeySteps.forEach((s) => s.classList.remove('is-active'));
+  step.classList.add('is-active');
+  const img = step.dataset.img;
+  if (img && journeyPhone && !journeyPhone.src.endsWith(img)) {
+    journeyPhone.style.opacity = '0';                 // soft cross-fade swap
+    setTimeout(() => {
+      journeyPhone.src = img;
+      journeyPhone.style.opacity = '1';
+    }, 170);
+  }
+}
+
+journeySteps.forEach((step) => step.addEventListener('click', () => activateStep(step)));
+
+// clicking the phone advances to the next step that has its own screenshot
+if (journeyPhone) {
+  const imgSteps = journeySteps.filter((s) => s.dataset.img);
+  if (imgSteps.length > 1) {
+    journeyPhone.style.cursor = 'pointer';
+    journeyPhone.addEventListener('click', () => {
+      const idx = imgSteps.findIndex((s) => s.classList.contains('is-active'));
+      activateStep(imgSteps[(idx + 1) % imgSteps.length]);
+    });
+  }
+}
 
 // ===== FAQ accordion =====
 const faqItems = document.querySelectorAll('.faq-item');
