@@ -925,6 +925,9 @@ a { color: inherit; text-decoration: none; }
   .hero-sub { font-size: 0.95rem; }
   .container { padding-inline: 18px; }
   .back-to-top { right: 14px; bottom: 14px; }
+  /* nudge the corner icons inward so they don't hug the screen edges on mobile */
+  .ho-music, .ho-gear   { transform: translateX(12px); }
+  .ho-masks, .ho-trophy { transform: translateX(-12px); }
 }
 
 /* =========================================================
